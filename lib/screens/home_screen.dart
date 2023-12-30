@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:peedify/routes/router_config.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -73,6 +75,8 @@ class HomeScreen extends StatelessWidget {
                       print('Address: ${addressController.text}');
                       print('Bill Number: ${billNumberController.text}');
                       print('Date: ${dateController.text}');
+
+                      GoRouter.of(context).go("/bill");
                     }
                   },
                   child: const Text('Submit'),
