@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:peedify/routes/router_config.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
