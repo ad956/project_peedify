@@ -35,21 +35,8 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      # - name: Run tests
-      #   run: flutter test
-
       - name: Build APK
         run: flutter build apk --release
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v4.0.2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
 
       - name: Upload APK
         uses: actions/upload-artifact@v4.4.0
@@ -57,10 +44,21 @@ jobs:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
-      - name: Send APK to Telegram
+      - name: Get App Info and Generate Message
+        id: app_info
+        run: |
+          APP_NAME=$(grep -m 1 'name:' pubspec.yaml | awk '{print $2}' | tr -d "'")
+          VERSION=$(grep -m 1 'version:' pubspec.yaml | awk '{print $2}' | tr -d "'")
+          COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+          echo "MESSAGE=New release: $APP_NAME v$VERSION%0A%0ALatest commit: $COMMIT_MSG" >> $GITHUB_OUTPUT
+
+      - name: Send APK and Info to Telegram
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
+          MESSAGE="${{ steps.app_info.outputs.MESSAGE }}"
+
           curl -F document=@"build/app/outputs/flutter-apk/app-release.apk" \
-          https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument?chat_id=${TELEGRAM_CHAT_ID}
+          -F caption="$MESSAGE" \
+          "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument?chat_id=${TELEGRAM_CHAT_ID}"
