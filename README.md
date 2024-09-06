@@ -17,9 +17,8 @@ To get started with Peedify, follow these simple steps:
 
 1. **Download and Install:**
 
-   <!-- - [Download Peedify](#) from the app store. -->
-
-   - Under Development :).
+   - 🎉 You can now download the latest version of Peedify directly from our Telegram bot: [releasebot](https://t.me/ad956_releasebot).
+   - Get the app and start converting your bills to PDF today! 📥
 
 2. **Login or Sign Up:**
 
@@ -36,4 +35,4 @@ To get started with Peedify, follow these simple steps:
 5. **View and Share:**
    - Access your PDF bills in the app and share them easily.
 
-Happy billing with Peedify!
+Happy billing with Peedify! 🎉
