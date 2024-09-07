@@ -1,98 +1,168 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 
-class BillDetailsForm extends StatefulWidget {
-  @override
-  _BillDetailsFormState createState() => _BillDetailsFormState();
-}
+import '../widgets/build_date_field.dart';
+import '../widgets/build_text_field.dart';
+import 'package:pdf/widgets.dart' as pw;
 
-class _BillDetailsFormState extends State<BillDetailsForm> {
+class BillDetailsForm extends StatelessWidget {
   final List<Map<String, String>> billDetailsList = [];
+
   final _formKey = GlobalKey<FormState>();
 
-  String sNo = '';
-  String description = '';
-  String measurement = '';
-  String squareFeet = '';
-  String qty = '';
-  String rate = '';
+  final String sNo = '';
+  final String description = '';
+  final String measurement = '';
+  final String squareFeet = '';
+  final String qty = '';
+  final String rate = '';
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController billNumberController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+
+  BillDetailsForm({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'S.No'),
-                onChanged: (value) {
-                  sNo = value;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Description'),
-                onChanged: (value) {
-                  description = value;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Measurement'),
-                onChanged: (value) {
-                  measurement = value;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'S.Feet'),
-                onChanged: (value) {
-                  squareFeet = value;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Qty'),
-                onChanged: (value) {
-                  qty = value;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Rate'),
-                onChanged: (value) {
-                  rate = value;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    double amount = double.parse(squareFeet) *
-                        double.parse(qty) *
-                        double.parse(rate);
-                    String amountString = amount.toStringAsFixed(2);
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Generate Invoice',
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        color: Colors.deepPurple,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 20.0),
+                Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        buildTextField(
+                          controller: nameController,
+                          label: 'M/s (Name of Client)',
+                        ),
+                        const SizedBox(height: 16.0),
+                        buildTextField(
+                          controller: addressController,
+                          label: 'Address',
+                        ),
+                        const SizedBox(height: 16.0),
+                        buildTextField(
+                          controller: billNumberController,
+                          label: 'No: (Bill Number)',
+                        ),
+                        const SizedBox(height: 16.0),
+                        buildDateField(
+                          context,
+                          controller: dateController,
+                          label: 'Date',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30.0),
+                Center(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(
+                      Icons.picture_as_pdf,
+                      color: Colors.white,
+                    ),
+                    label: const Text(
+                      'Generate PDF',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        final pdf = pw.Document();
 
-                    Map<String, String> billDetails = {
-                      'S.No': sNo,
-                      'Description': description,
-                      'Measurement': measurement,
-                      'S.Feet': squareFeet,
-                      'Qty': qty,
-                      'Rate': rate,
-                      'Amount': amountString,
-                    };
+                        // Add header information
+                        pdf.addPage(
+                          pw.Page(
+                            build: (pw.Context context) => pw.Column(
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.Text('Furniture Mart',
+                                    style: pw.TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: pw.FontWeight.bold)),
+                                pw.Text('Address: Some Address',
+                                    style: const pw.TextStyle(fontSize: 12)),
+                                pw.Text('Contact: 13444444',
+                                    style: const pw.TextStyle(fontSize: 12)),
+                                pw.SizedBox(height: 20),
+                                pw.Text('Invoice Details',
+                                    style: pw.TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: pw.FontWeight.bold)),
+                                pw.SizedBox(height: 10),
+                                pw.TableHelper.fromTextArray(
+                                  context: context,
+                                  data: <List<String>>[
+                                    <String>[
+                                      'Client Name',
+                                      'Address',
+                                      'Bill Number',
+                                      'Date'
+                                    ],
+                                    <String>[
+                                      nameController.text,
+                                      addressController.text,
+                                      billNumberController.text,
+                                      dateController.text,
+                                    ],
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
 
-                    billDetailsList.add(billDetails);
+                        final output = await getTemporaryDirectory();
+                        final file = File("${output.path}/invoice.pdf");
+                        await file.writeAsBytes(await pdf.save());
 
-                    _formKey.currentState!.reset();
+                        await OpenFile.open(file.path);
 
-                    print('Bill Details Added: $billDetailsList');
-                  }
-                },
-                child: const Text('Add Bill Details'),
-              ),
-              const SizedBox(height: 16.0),
-              Text('Added Bill Details: $billDetailsList'),
-            ],
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('PDF created successfully!'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 12.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      backgroundColor: Colors.deepPurple,
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
