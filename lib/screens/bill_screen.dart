@@ -27,6 +27,69 @@ class BillDetailsForm extends StatelessWidget {
 
   BillDetailsForm({super.key});
 
+  void _showSnackBar(BuildContext context, String message,
+      {Color backgroundColor = Colors.green}) {
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: backgroundColor,
+      ),
+    );
+  }
+
+  Future<void> _generatePDF(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      final pdf = pw.Document();
+
+      // Add header information
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) => pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Furniture Mart',
+                  style: pw.TextStyle(
+                      fontSize: 24, fontWeight: pw.FontWeight.bold)),
+              pw.Text('Address: Some Address',
+                  style: const pw.TextStyle(fontSize: 12)),
+              pw.Text('Contact: 13444444',
+                  style: const pw.TextStyle(fontSize: 12)),
+              pw.SizedBox(height: 20),
+              pw.Text('Invoice Details',
+                  style: pw.TextStyle(
+                      fontSize: 20, fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 10),
+              pw.TableHelper.fromTextArray(
+                context: context,
+                data: <List<String>>[
+                  <String>['Client Name', 'Address', 'Bill Number', 'Date'],
+                  <String>[
+                    nameController.text,
+                    addressController.text,
+                    billNumberController.text,
+                    dateController.text,
+                  ],
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+
+      final output = await getTemporaryDirectory();
+      final file = File("${output.path}/invoice.pdf");
+      await file.writeAsBytes(await pdf.save());
+
+      await OpenFile.open(file.path);
+
+      if (context.mounted) {
+        _showSnackBar(context, 'PDF created successfully!');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,66 +153,7 @@ class BillDetailsForm extends StatelessWidget {
                       'Generate PDF',
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        final pdf = pw.Document();
-
-                        // Add header information
-                        pdf.addPage(
-                          pw.Page(
-                            build: (pw.Context context) => pw.Column(
-                              crossAxisAlignment: pw.CrossAxisAlignment.start,
-                              children: [
-                                pw.Text('Furniture Mart',
-                                    style: pw.TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: pw.FontWeight.bold)),
-                                pw.Text('Address: Some Address',
-                                    style: const pw.TextStyle(fontSize: 12)),
-                                pw.Text('Contact: 13444444',
-                                    style: const pw.TextStyle(fontSize: 12)),
-                                pw.SizedBox(height: 20),
-                                pw.Text('Invoice Details',
-                                    style: pw.TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: pw.FontWeight.bold)),
-                                pw.SizedBox(height: 10),
-                                pw.TableHelper.fromTextArray(
-                                  context: context,
-                                  data: <List<String>>[
-                                    <String>[
-                                      'Client Name',
-                                      'Address',
-                                      'Bill Number',
-                                      'Date'
-                                    ],
-                                    <String>[
-                                      nameController.text,
-                                      addressController.text,
-                                      billNumberController.text,
-                                      dateController.text,
-                                    ],
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-
-                        final output = await getTemporaryDirectory();
-                        final file = File("${output.path}/invoice.pdf");
-                        await file.writeAsBytes(await pdf.save());
-
-                        await OpenFile.open(file.path);
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('PDF created successfully!'),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                      }
-                    },
+                    onPressed: () => _generatePDF(context),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20.0, vertical: 12.0),
