@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:peedify/widgets/action_buttons.dart';
+import 'package:peedify/widgets/app_header.dart';
+import 'package:peedify/widgets/bottom_navigation.dart';
+import 'package:peedify/widgets/main_content.dart';
 import 'bill_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -6,12 +10,21 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const isEmpty = true;
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Peedify"),
-          centerTitle: true,
-          // backgroundColor: Colors.deepPurple,
+      appBar: const AppHeader(
+        actionButtons: ActionButtons(),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: isEmpty ? const MainContent() : BillDetailsForm(),
+            ),
+            const BottomNavBar(),
+          ],
         ),
-        body: BillDetailsForm());
+      ),
+    );
   }
 }
