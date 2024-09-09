@@ -11,7 +11,7 @@ class BottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Add file'),
         BottomNavigationBarItem(icon: Icon(Icons.build), label: 'Tools'),
       ],
-      selectedItemColor: Colors.red,
+      selectedItemColor: const Color.fromRGBO(30, 90, 255, 0.5),
       unselectedItemColor: Colors.grey,
     );
   }
