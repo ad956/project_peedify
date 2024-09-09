@@ -43,6 +43,7 @@ dependencies:
   drift: ^2.15.0
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.3.10
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
