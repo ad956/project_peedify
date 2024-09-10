@@ -50,7 +50,7 @@ jobs:
           APP_NAME=$(grep -m 1 'name:' pubspec.yaml | awk '{print $2}' | tr -d "'")
           VERSION=$(grep -m 1 'version:' pubspec.yaml | awk '{print $2}' | tr -d "'")
           COMMIT_MSG=$(git log -1 --pretty=format:"%s")
-          echo "MESSAGE=New release: $APP_NAME v$VERSION%0A%0ALatest commit: $COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "MESSAGE=New release: $APP_NAME v$VERSION%0A%0A $COMMIT_MSG" >> $GITHUB_OUTPUT
 
       - name: Send APK and Info to Telegram
         env:
