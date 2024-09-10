@@ -16,6 +16,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
+              // ignore: dead_code
               child: isEmpty ? const MainContent() : BillDetailsForm(),
             ),
             const BottomNavBar(),
