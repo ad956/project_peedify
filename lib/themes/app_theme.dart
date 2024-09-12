@@ -52,9 +52,8 @@ class AppTheme {
         systemOverlayStyle: colorScheme.brightness == Brightness.light
             ? SystemUiOverlayStyle.dark
             : SystemUiOverlayStyle.light,
-        titleTextStyle: textTheme.titleLarge?.copyWith(
-          color: colorScheme.onSurface,
-        ),
+        titleTextStyle: textTheme.titleLarge
+            ?.copyWith(color: colorScheme.onSurface, fontSize: 20),
         iconTheme: IconThemeData(color: colorScheme.onSurface),
       ),
 
@@ -65,7 +64,7 @@ class AppTheme {
           backgroundColor: colorScheme.primaryContainer,
           foregroundColor: colorScheme.onPrimaryContainer,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(20),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           textStyle: textTheme.labelLarge?.copyWith(
