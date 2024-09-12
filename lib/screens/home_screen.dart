@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:peedify/widgets/app_header.dart';
+import 'package:peedify/widgets/available_template.dart';
 import 'package:peedify/widgets/empty_state.dart';
-import 'package:peedify/widgets/main_content.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const isEmpty = true;
+    const isEmpty = false;
     return Scaffold(
       appBar: const AppHeader(),
       body: const SafeArea(
@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Expanded(
               // ignore: dead_code
-              child: isEmpty ? EmptyStateWidget() : MainContent(),
+              child: isEmpty ? EmptyStateWidget() : AvailableTemplates(),
             ),
           ],
         ),
