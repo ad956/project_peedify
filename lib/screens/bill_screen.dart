@@ -28,13 +28,14 @@ class BillDetailsForm extends StatelessWidget {
   BillDetailsForm({super.key});
 
   void _showSnackBar(BuildContext context, String message,
-      {Color backgroundColor = Colors.green}) {
+      {Color? backgroundColor}) {
     if (!context.mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: backgroundColor,
+        backgroundColor:
+            backgroundColor ?? Theme.of(context).colorScheme.secondary,
       ),
     );
   }
@@ -92,7 +93,13 @@ class BillDetailsForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Generate Invoice'),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -102,18 +109,16 @@ class BillDetailsForm extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Generate Invoice',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: Colors.deepPurple,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  'Invoice Details',
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 20.0),
                 Card(
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  elevation: theme.cardTheme.elevation,
+                  shape: theme.cardTheme.shape,
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
@@ -145,24 +150,16 @@ class BillDetailsForm extends StatelessWidget {
                 const SizedBox(height: 30.0),
                 Center(
                   child: ElevatedButton.icon(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.picture_as_pdf,
-                      color: Colors.white,
+                      color: colorScheme.onPrimary,
                     ),
-                    label: const Text(
+                    label: Text(
                       'Generate PDF',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: colorScheme.onPrimary),
                     ),
                     onPressed: () => _generatePDF(context),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 12.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      backgroundColor: Colors.deepPurple,
-                      textStyle: const TextStyle(fontSize: 16),
-                    ),
+                    style: theme.elevatedButtonTheme.style,
                   ),
                 ),
               ],
