@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:peedify/providers/theme_provider.dart';
 import 'package:peedify/routes/router_config.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -10,14 +17,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Peedify',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      debugShowCheckedModeBanner: false,
-      routerConfig: PeedifyNavigator().router,
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp.router(
+          title: 'Peedify',
+          theme: themeProvider.theme,
+          themeMode: themeProvider.themeMode,
+          debugShowCheckedModeBanner: false,
+          routerConfig: PeedifyNavigator().router,
+        );
+      },
     );
   }
 }
