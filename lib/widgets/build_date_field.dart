@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 Widget buildDateField(BuildContext context,
     {required TextEditingController controller, required String label}) {
@@ -6,16 +7,8 @@ Widget buildDateField(BuildContext context,
     controller: controller,
     decoration: InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(color: Colors.deepPurple),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Colors.deepPurple),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Colors.deepPurple, width: 2.0),
-      ),
-      suffixIcon: const Icon(Icons.calendar_today, color: Colors.deepPurple),
+      suffixIcon: Icon(Icons.calendar_today,
+          color: Theme.of(context).colorScheme.primary),
     ),
     readOnly: true,
     onTap: () async {
@@ -24,10 +17,21 @@ Widget buildDateField(BuildContext context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2000),
         lastDate: DateTime(2101),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: Theme.of(context).colorScheme.copyWith(
+                    primary: Theme.of(context).colorScheme.primary,
+                    onPrimary: Theme.of(context).colorScheme.onPrimary,
+                  ),
+            ),
+            child: child!,
+          );
+        },
       );
       if (pickedDate != null) {
-        controller.text =
-            "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+        String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+        controller.text = formattedDate;
       }
     },
     validator: (value) {
