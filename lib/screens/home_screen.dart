@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:peedify/widgets/app_header.dart';
+import 'package:peedify/widgets/empty_state.dart';
 import 'package:peedify/widgets/main_content.dart';
-import 'bill_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -11,16 +11,26 @@ class HomeScreen extends StatelessWidget {
     const isEmpty = true;
     return Scaffold(
       appBar: const AppHeader(),
-      body: SafeArea(
+      body: const SafeArea(
         child: Column(
           children: [
             Expanded(
               // ignore: dead_code
-              child: isEmpty ? const MainContent() : BillDetailsForm(),
+              child: isEmpty ? EmptyStateWidget() : MainContent(),
             ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print("hey");
+        },
+        child: const Icon(
+          Icons.add_rounded,
+          size: 30,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
