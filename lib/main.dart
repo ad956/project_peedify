@@ -21,10 +21,15 @@ class MyApp extends StatelessWidget {
       builder: (context, themeProvider, child) {
         return MaterialApp.router(
           title: 'Peedify',
-          theme: themeProvider.theme,
+          theme: themeProvider.lightTheme,
+          darkTheme: themeProvider.darkTheme,
           themeMode: themeProvider.themeMode,
           debugShowCheckedModeBanner: false,
           routerConfig: PeedifyNavigator().router,
+          builder: (context, child) {
+            themeProvider.setSystemUIOverlayStyle(context);
+            return child!;
+          },
         );
       },
     );
