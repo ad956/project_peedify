@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:peedify/widgets/app_header.dart';
-import 'package:peedify/widgets/bottom_navigation.dart';
 import 'package:peedify/widgets/main_content.dart';
 import 'bill_screen.dart';
 
@@ -19,7 +18,6 @@ class HomeScreen extends StatelessWidget {
               // ignore: dead_code
               child: isEmpty ? const MainContent() : BillDetailsForm(),
             ),
-            const BottomNavBar(),
           ],
         ),
       ),
