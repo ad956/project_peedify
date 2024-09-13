@@ -25,8 +25,6 @@ class PeedifyNavigator {
             final template = arguments['template'] as Template;
             final columns = arguments['columns'] as List<TemplateColumn>;
 
-            print('Columns in route: $columns');
-
             return CustomTransitionPage(
               key: state.pageKey,
               transitionDuration: const Duration(milliseconds: 1300),
