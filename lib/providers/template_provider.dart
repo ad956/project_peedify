@@ -23,6 +23,7 @@ class TemplateNotifier extends ChangeNotifier {
 
   Future<void> createTemplateWithColumns(String name, String shopName,
       String shopAddress, String shopPhone, List<String> columnNames) async {
+    print('Creating template with columns n tempale notifer : $columnNames');
     try {
       final templateId = await _repository.createTemplate(
           name, shopName, shopAddress, shopPhone);
@@ -63,5 +64,14 @@ class TemplateNotifier extends ChangeNotifier {
 
   Future<void> refreshTemplates() async {
     await _loadTemplates();
+  }
+
+  Future<List<TemplateColumn>> getColumnsForTemplate(int templateId) async {
+    try {
+      return await _repository.getColumnsForTemplate(templateId);
+    } catch (error) {
+      debugPrint("Error fetching columns for template: $error");
+      return [];
+    }
   }
 }
