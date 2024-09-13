@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:peedify/data/local/database.dart';
-import 'package:peedify/providers/template_provider.dart';
 import 'package:peedify/routes/route_constants.dart';
 import 'package:peedify/screens/bill_screen.dart';
 import 'package:peedify/screens/error_screen.dart';
@@ -26,6 +25,8 @@ class PeedifyNavigator {
             final template = arguments['template'] as Template;
             final columns = arguments['columns'] as List<TemplateColumn>;
 
+            print('Columns in route: $columns');
+
             return CustomTransitionPage(
               key: state.pageKey,
               transitionDuration: const Duration(milliseconds: 1300),
@@ -45,6 +46,6 @@ class PeedifyNavigator {
               },
             );
           },
-        )
+        ),
       ]);
 }
