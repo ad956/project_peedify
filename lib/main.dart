@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:peedify/data/local/database_provider.dart';
+import 'package:peedify/data/local/template_repository.dart';
+import 'package:peedify/providers/template_provider.dart';
 import 'package:peedify/providers/theme_provider.dart';
 import 'package:peedify/routes/router_config.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  final database = constructDb();
+  final repository = TemplateRepository(database);
+
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => TemplateNotifier(repository)),
+      ],
       child: const MyApp(),
     ),
   );
