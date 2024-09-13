@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:peedify/data/local/database.dart';
 import 'package:peedify/providers/template_provider.dart';
+import 'package:peedify/routes/route_constants.dart';
 import 'package:provider/provider.dart';
 
 class AvailableTemplates extends StatelessWidget {
@@ -40,9 +41,18 @@ class AvailableTemplates extends StatelessWidget {
             itemCount: templates.length,
             itemBuilder: (context, index) {
               final template = templates[index];
-              return TemplateCard(
-                template: template,
-                columns: [],
+              return FutureBuilder<List<TemplateColumn>>(
+                future: templateNotifier.getColumnsForTemplate(template.id),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  final columns = snapshot.data ?? [];
+                  return TemplateCard(
+                    template: template,
+                    columns: columns,
+                  );
+                },
               );
             },
           );
@@ -125,10 +135,13 @@ class TemplateCard extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: ElevatedButton(
                         onPressed: () {
-                          context.go('/bill', extra: {
-                            'template': template,
-                            'columns': columns,
-                          });
+                          context.goNamed(
+                            RouteNames.billScreen,
+                            extra: {
+                              'template': template,
+                              'columns': columns,
+                            },
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: colorScheme.primary,
