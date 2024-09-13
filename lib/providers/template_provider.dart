@@ -13,13 +13,55 @@ class TemplateNotifier extends ChangeNotifier {
   List<Template> get templates => _templates;
 
   Future<void> _loadTemplates() async {
-    _templates = await _repository.getAllTemplates();
+    try {
+      _templates = await _repository.getAllTemplates();
+    } catch (error) {
+      debugPrint("Error loading templates: $error");
+    }
     notifyListeners();
   }
 
-  Future<void> createTemplate(String name, String shopName, String shopAddress,
-      String shopPhone) async {
-    await _repository.createTemplate(name, shopName, shopAddress, shopPhone);
+  Future<void> createTemplateWithColumns(String name, String shopName,
+      String shopAddress, String shopPhone, List<String> columnNames) async {
+    try {
+      final templateId = await _repository.createTemplate(
+          name, shopName, shopAddress, shopPhone);
+
+      for (int i = 0; i < columnNames.length; i++) {
+        await _repository.addColumnToTemplate(templateId, columnNames[i], i);
+      }
+
+      await _loadTemplates();
+    } catch (error) {
+      debugPrint("Error creating template with columns: $error");
+    }
+  }
+
+  Future<void> deleteTemplate(int templateId) async {
+    try {
+      await _repository.deleteTemplate(templateId);
+
+      // Reload templates after deletion.
+      await _loadTemplates();
+    } catch (error) {
+      // Handle any potential errors during deletion.
+      debugPrint("Error deleting template: $error");
+    }
+  }
+
+  Future<void> updateTemplate(int templateId, String newName,
+      String newShopName, String newShopAddress, String newShopPhone) async {
+    try {
+      await _repository.updateTemplate(
+          templateId, newName, newShopName, newShopAddress, newShopPhone);
+
+      await _loadTemplates();
+    } catch (error) {
+      debugPrint("Error updating template: $error");
+    }
+  }
+
+  Future<void> refreshTemplates() async {
     await _loadTemplates();
   }
 }
