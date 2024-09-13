@@ -206,7 +206,6 @@ class _ColumnNamesDialogState extends State<_ColumnNamesDialog> {
         ElevatedButton(
           child: Text('Create Template', style: textTheme.labelLarge),
           onPressed: () {
-            print('Columns being saved uin home screen : $columnNames');
             widget.templateNotifier.createTemplateWithColumns(
               widget.name,
               widget.shopName,
