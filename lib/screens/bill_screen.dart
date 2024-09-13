@@ -9,7 +9,7 @@ import 'package:peedify/widgets/build_text_field.dart';
 
 class BillScreen extends StatefulWidget {
   final Template template;
-  final List<TemplateColumn> templateColumns; // Updated to accept columns
+  final List<TemplateColumn> templateColumns;
 
   const BillScreen({
     Key? key,
@@ -18,10 +18,17 @@ class BillScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _BillScreenState createState() => _BillScreenState();
 }
 
 class _BillScreenState extends State<BillScreen> {
+  @override
+  void initState() {
+    super.initState();
+    print('Template Columns in BillScreen: ${widget.templateColumns}');
+  }
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
@@ -51,8 +58,6 @@ class _BillScreenState extends State<BillScreen> {
   Future<void> _generatePDF(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final pdf = pw.Document();
-
-      print('Template Columns: ${widget.templateColumns}');
 
       pdf.addPage(
         pw.Page(
@@ -103,32 +108,30 @@ class _BillScreenState extends State<BillScreen> {
                 children: [
                   // Table Header (Column names from the template columns)
                   pw.TableRow(
-                    children: [
-                      for (var column in widget.templateColumns)
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.all(8),
-                          child: pw.Text(
-                            column.columnName, // Column name
-                            style: pw.TextStyle(
-                              fontSize: 14,
-                              fontWeight: pw.FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                    ],
+                    children: widget.templateColumns
+                        .map((column) => pw.Padding(
+                              padding: const pw.EdgeInsets.all(8),
+                              child: pw.Text(
+                                column.columnName,
+                                style: pw.TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                              ),
+                            ))
+                        .toList(),
                   ),
 
                   // Mock Data (5 rows of sample data)
                   for (int i = 0; i < 5; i++)
                     pw.TableRow(
-                      children: [
-                        for (var column in widget.templateColumns)
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(8),
-                            child: pw.Text(
-                                '${column.columnName} $i'), // Sample data
-                          ),
-                      ],
+                      children: widget.templateColumns
+                          .map((column) => pw.Padding(
+                                padding: const pw.EdgeInsets.all(8),
+                                child:
+                                    pw.Text('Sample ${column.columnName} $i'),
+                              ))
+                          .toList(),
                     ),
                 ],
               ),
@@ -143,6 +146,7 @@ class _BillScreenState extends State<BillScreen> {
 
       await OpenFile.open(file.path);
 
+      // ignore: use_build_context_synchronously
       _showSnackBar(context, 'PDF created successfully!');
     }
   }
