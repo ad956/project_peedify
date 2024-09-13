@@ -148,21 +148,21 @@ class AppTheme {
 
       // Checkbox
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor:
+            WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+          if (states.contains(WidgetState.selected)) {
             return colorScheme.primary;
           }
           return null;
         }),
-        checkColor: MaterialStateProperty.all(colorScheme.onPrimary),
+        checkColor: WidgetStateProperty.all(colorScheme.onPrimary),
       ),
 
       // Radio
       radioTheme: RadioThemeData(
-        fillColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor:
+            WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+          if (states.contains(WidgetState.selected)) {
             return colorScheme.primary;
           }
           return null;
@@ -171,16 +171,16 @@ class AppTheme {
 
       // Switch
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-          if (states.contains(MaterialState.selected)) {
+        thumbColor:
+            WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+          if (states.contains(WidgetState.selected)) {
             return colorScheme.primary;
           }
           return null;
         }),
-        trackColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-          if (states.contains(MaterialState.selected)) {
+        trackColor:
+            WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+          if (states.contains(WidgetState.selected)) {
             return colorScheme.primaryContainer;
           }
           return null;
@@ -204,7 +204,7 @@ class AppTheme {
 
       // Chip
       chipTheme: ChipThemeData(
-        backgroundColor: colorScheme.surfaceVariant,
+        backgroundColor: colorScheme.surfaceContainerHighest,
         labelStyle: textTheme.labelLarge?.copyWith(
           color: colorScheme.onSurfaceVariant,
         ),
@@ -260,7 +260,7 @@ class AppTheme {
       // TextField
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: colorScheme.surfaceVariant,
+        fillColor: colorScheme.surfaceContainerHighest,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
@@ -290,7 +290,7 @@ class AppTheme {
       ),
 
       // Scaffold
-      scaffoldBackgroundColor: colorScheme.background,
+      scaffoldBackgroundColor: colorScheme.surface,
     );
   }
 
