@@ -53,7 +53,7 @@ jobs:
           APP_NAME=$(grep -m 1 'name:' pubspec.yaml | awk '{print $2}' | tr -d "'")
           VERSION=$(grep -m 1 'version:' pubspec.yaml | awk '{print $2}' | tr -d "'")
           COMMIT_MSG=$(git log -1 --pretty=format:"%s")
-          echo "MESSAGE=🚀 New Release: $APP_NAME%0A📦 Version: $VERSION%0A%0A💬 Commit Message:%0A$COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "MESSAGE=🚀 New Release: $APP_NAME%0A%0A📦 Version: $VERSION%0A%0A💬 Commit Message:%0A$COMMIT_MSG" >> $GITHUB_OUTPUT
 
       - name: Send APK and Info to Telegram
         env:
@@ -61,7 +61,8 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           MESSAGE="${{ steps.app_info.outputs.MESSAGE }}"
+          FORMATTED_MESSAGE=$(echo -e "$MESSAGE" | sed 's/%0A/\n/g')
 
           curl -F document=@"build/app/outputs/flutter-apk/app-release.apk" \
-          -F caption="$MESSAGE" \
+          -F "caption=$FORMATTED_MESSAGE" \
           "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument?chat_id=${TELEGRAM_CHAT_ID}"
