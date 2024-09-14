@@ -35,6 +35,9 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Run build_runner
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
       - name: Build APK
         run: flutter build apk --release
 
@@ -50,7 +53,7 @@ jobs:
           APP_NAME=$(grep -m 1 'name:' pubspec.yaml | awk '{print $2}' | tr -d "'")
           VERSION=$(grep -m 1 'version:' pubspec.yaml | awk '{print $2}' | tr -d "'")
           COMMIT_MSG=$(git log -1 --pretty=format:"%s")
-          echo "MESSAGE=New release: $APP_NAME v$VERSION%0A%0A $COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "MESSAGE=🚀 New Release: $APP_NAME%0A📦 Version: $VERSION%0A%0A💬 Commit Message:%0A$COMMIT_MSG" >> $GITHUB_OUTPUT
 
       - name: Send APK and Info to Telegram
         env:
