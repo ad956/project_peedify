@@ -1,3 +1,19 @@
 flutter_native_splash:
+  color: "#1f2939"
   image: assets/icons/peedify.png
-  color: "1f2939"
+  # branding: assets/branding/logo.png
+  color_dark: "#121212"
+  # image_dark: assets/icons/peedify_dark.png
+  # branding_dark: assets/branding/logo_dark.png
+
+  android_12:
+    image: assets/icons/peedify.png
+    icon_background_color: "#1f2939"
+    # image_dark: assets/icons/peedify_android12_dark.png
+    icon_background_color_dark: "#121212"
+
+  web: false
+  ios: true
+  android: true
+
+  fullscreen: true
