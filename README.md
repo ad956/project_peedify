@@ -17,7 +17,7 @@ To get started with Peedify, follow these simple steps:
 
 ### 1. **Download and Install Peedify 📲**
 
-📥 Download the app from [here](https://your-peedify-site-link.com).
+📥 Download the app from [here](https://google.co.in).
 
 ### 2. **Login or Sign Up 🖊️**
 
